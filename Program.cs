@@ -2,6 +2,9 @@
 using System.IO;
 using System.Collections.Generic;
 
+using KSynthLib.Common;
+using KSynthLib.K1;
+
 namespace k1tool
 {
     public class SystemExclusiveHeader
@@ -109,10 +112,10 @@ namespace k1tool
                         int offset = headerLength;
                         for (int i = 0; i < NumSingles; i++)
                         {
-                            byte[] singleData = new byte[Single.DataSize];
-                            Buffer.BlockCopy(message, offset, singleData, 0, Single.DataSize);
+                            byte[] singleData = new byte[SinglePatch.DataSize];
+                            Buffer.BlockCopy(message, offset, singleData, 0, SinglePatch.DataSize);
                             System.Console.WriteLine("INGOING SINGLE DATA = \n" + Util.HexDump(singleData));
-                            Single single = new Single(singleData);
+                            SinglePatch single = new SinglePatch(singleData);
                             System.Console.WriteLine(single.ToString());
 
                             byte[] sysExData = single.ToData();
@@ -121,7 +124,7 @@ namespace k1tool
                             (bool result, int diffIndex) = Util.ByteArrayCompare(singleData, sysExData);
                             System.Console.WriteLine(String.Format("match = {0}, diff index = {1}", result ? "YES :-)" : "NO :-(", diffIndex));
 
-                            offset += Single.DataSize;
+                            offset += SinglePatch.DataSize;
                         }
                     }
                     else if (header.Substatus2 == 0x40)
